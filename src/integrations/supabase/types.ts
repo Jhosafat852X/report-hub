@@ -14,16 +14,128 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          area: string | null
+          created_at: string
+          email: string | null
+          id: string
+          nombre_completo: string
+          updated_at: string
+        }
+        Insert: {
+          area?: string | null
+          created_at?: string
+          email?: string | null
+          id: string
+          nombre_completo?: string
+          updated_at?: string
+        }
+        Update: {
+          area?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          nombre_completo?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      reportes: {
+        Row: {
+          area: string | null
+          asunto: string
+          atendido_por: string | null
+          atendido_por_nombre: string | null
+          creado_por: string
+          creado_por_nombre: string
+          created_at: string
+          descripcion: string
+          estado: Database["public"]["Enums"]["reporte_estado"]
+          fecha_finalizado: string | null
+          fecha_programada: string | null
+          foto_url: string | null
+          id: string
+          notas_mantenimiento: string | null
+          updated_at: string
+          urgencia: Database["public"]["Enums"]["urgencia_nivel"]
+        }
+        Insert: {
+          area?: string | null
+          asunto: string
+          atendido_por?: string | null
+          atendido_por_nombre?: string | null
+          creado_por: string
+          creado_por_nombre?: string
+          created_at?: string
+          descripcion: string
+          estado?: Database["public"]["Enums"]["reporte_estado"]
+          fecha_finalizado?: string | null
+          fecha_programada?: string | null
+          foto_url?: string | null
+          id?: string
+          notas_mantenimiento?: string | null
+          updated_at?: string
+          urgencia?: Database["public"]["Enums"]["urgencia_nivel"]
+        }
+        Update: {
+          area?: string | null
+          asunto?: string
+          atendido_por?: string | null
+          atendido_por_nombre?: string | null
+          creado_por?: string
+          creado_por_nombre?: string
+          created_at?: string
+          descripcion?: string
+          estado?: Database["public"]["Enums"]["reporte_estado"]
+          fecha_finalizado?: string | null
+          fecha_programada?: string | null
+          foto_url?: string | null
+          id?: string
+          notas_mantenimiento?: string | null
+          updated_at?: string
+          urgencia?: Database["public"]["Enums"]["urgencia_nivel"]
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "encargado" | "mantenimiento" | "admin"
+      reporte_estado: "pendiente" | "programado" | "finalizado"
+      urgencia_nivel: "baja" | "media" | "alta"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +262,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["encargado", "mantenimiento", "admin"],
+      reporte_estado: ["pendiente", "programado", "finalizado"],
+      urgencia_nivel: ["baja", "media", "alta"],
+    },
   },
 } as const
