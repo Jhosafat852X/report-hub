@@ -20,7 +20,7 @@ function AuthPage() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/app" });
+      if (data.session) navigate({ to: "/inicio" });
     });
   }, [navigate]);
 
@@ -40,7 +40,7 @@ function AuthPage() {
     setLoading(false);
     if (error) return toast.error(error.message);
     toast.success("Bienvenido");
-    navigate({ to: "/app" });
+    navigate({ to: "/inicio" });
   }
 
   async function handleSignup(e: React.FormEvent) {
@@ -50,7 +50,7 @@ function AuthPage() {
       email: sEmail,
       password: sPass,
       options: {
-        emailRedirectTo: `${window.location.origin}/app`,
+        emailRedirectTo: `${window.location.origin}/inicio`,
         data: { nombre_completo: sName, area: sArea },
       },
     });
@@ -62,7 +62,7 @@ function AuthPage() {
   async function handleGoogle() {
     setLoading(true);
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin + "/app",
+      redirect_uri: window.location.origin + "/inicio",
     });
     if (result.error) {
       setLoading(false);
@@ -70,7 +70,7 @@ function AuthPage() {
       return;
     }
     if (result.redirected) return;
-    navigate({ to: "/app" });
+    navigate({ to: "/inicio" });
   }
 
   return (

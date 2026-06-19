@@ -5,7 +5,7 @@ import {
   SidebarHeader, SidebarFooter, SidebarTrigger, useSidebar,
 } from "@/components/ui/sidebar";
 import {
-  Wrench, ClipboardPlus, ListChecks, LayoutGrid, History, Users, LogOut,
+  Wrench, ClipboardPlus, ListChecks, LayoutGrid, History, Users, LogOut, Home,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useCurrentUser, useUserProfile, useUserRoles, hasAnyRole, type AppRole } from "@/hooks/useUserData";
@@ -16,11 +16,12 @@ import { useQueryClient } from "@tanstack/react-query";
 type NavItem = { title: string; to: string; icon: any; roles: AppRole[] };
 
 const NAV: NavItem[] = [
-  { title: "Nuevo reporte", to: "/app/nuevo-reporte", icon: ClipboardPlus, roles: ["encargado", "admin"] },
-  { title: "Mis reportes", to: "/app/mis-reportes", icon: ListChecks, roles: ["encargado", "admin"] },
-  { title: "Mural", to: "/app/mural", icon: LayoutGrid, roles: ["mantenimiento", "admin"] },
-  { title: "Historial", to: "/app/historial", icon: History, roles: ["mantenimiento", "admin"] },
-  { title: "Usuarios", to: "/app/usuarios", icon: Users, roles: ["admin"] },
+  { title: "Inicio", to: "/inicio", icon: Home, roles: ["encargado", "mantenimiento", "admin"] },
+  { title: "Nuevo reporte", to: "/nuevo-reporte", icon: ClipboardPlus, roles: ["encargado", "admin"] },
+  { title: "Mis reportes", to: "/mis-reportes", icon: ListChecks, roles: ["encargado", "admin"] },
+  { title: "Mural", to: "/mural", icon: LayoutGrid, roles: ["mantenimiento", "admin"] },
+  { title: "Historial", to: "/historial", icon: History, roles: ["mantenimiento", "admin"] },
+  { title: "Usuarios", to: "/usuarios", icon: Users, roles: ["admin"] },
 ];
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
@@ -64,7 +65,7 @@ function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="border-b border-sidebar-border">
-        <Link to="/app" className="flex items-center gap-2 px-2 py-2">
+        <Link to="/inicio" className="flex items-center gap-2 px-2 py-2">
           <div className="size-9 rounded-md bg-sidebar-primary text-sidebar-primary-foreground grid place-items-center shrink-0">
             <Wrench className="size-5" />
           </div>
@@ -82,7 +83,7 @@ function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => {
-                const active = pathname === item.to || pathname.startsWith(item.to + "/");
+                const active = pathname === item.to;
                 return (
                   <SidebarMenuItem key={item.to}>
                     <SidebarMenuButton asChild isActive={active}>
