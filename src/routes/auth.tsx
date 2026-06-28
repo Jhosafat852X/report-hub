@@ -14,11 +14,18 @@ export const Route = createFileRoute("/auth")({
 });
 
 const MATRICULA_DOMAIN = "unistmo.local";
+const AUTH_REDIRECT_PATH = "/inicio";
+
 function matriculaToEmail(matricula: string) {
   return `${matricula.trim().toLowerCase()}@${MATRICULA_DOMAIN}`;
 }
 function isValidMatricula(m: string) {
   return /^[a-zA-Z0-9]{4,15}$/.test(m.trim());
+}
+function getAuthRedirectUrl() {
+  const configuredOrigin = import.meta.env.VITE_AUTH_REDIRECT_ORIGIN?.replace(/\/$/, "");
+  const origin = configuredOrigin || window.location.origin;
+  return `${origin}${AUTH_REDIRECT_PATH}`;
 }
 
 function AuthPage() {
@@ -60,7 +67,7 @@ function AuthPage() {
       email: matriculaToEmail(sMatricula),
       password: sPass,
       options: {
-        emailRedirectTo: `${window.location.origin}/inicio`,
+        emailRedirectTo: getAuthRedirectUrl(),
         data: {
           nombre_completo: sName,
           area: sArea,
