@@ -7,8 +7,8 @@ import { Input } from "@/components/ui/input";
 import { DEMO_ACCOUNTS, matriculaToDemoEmail } from "@/lib/demo-accounts";
 
 const seedDemoAccounts = createServerFn({ method: "POST" })
-  .validator((data: { token?: string }) => data)
-  .handler(async ({ data }) => {
+  .inputValidator((data: { token?: string }) => data)
+  .handler(async ({ data }: { data: { token?: string } }) => {
     const expectedToken = process.env.DEMO_SEED_TOKEN;
     if (expectedToken && data.token !== expectedToken) {
       throw new Error("Token demo incorrecto.");
@@ -99,7 +99,7 @@ function DemoAccessPage() {
     setResult(null);
     try {
       const response = await seedDemoAccountsFn({ data: { token: token || undefined } });
-      setResult(`Cuentas listas: ${response.prepared.map((item) => item.matricula).join(", ")}.`);
+      setResult(`Cuentas listas: ${response.prepared.map((item: { matricula: string }) => item.matricula).join(", ")}.`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "No se pudieron preparar las cuentas demo.");
     } finally {
