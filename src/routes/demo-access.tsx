@@ -99,7 +99,7 @@ function DemoAccessPage() {
     setResult(null);
     try {
       const response = await seedDemoAccountsFn({ data: { token: token || undefined } });
-      setResult(`Cuentas listas: ${response.prepared.map((item) => item.matricula).join(", ")}.`);
+      setResult(`Cuentas listas: ${response.prepared.map((item: { matricula: string }) => item.matricula).join(", ")}.`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "No se pudieron preparar las cuentas demo.");
     } finally {
