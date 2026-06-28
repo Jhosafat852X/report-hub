@@ -7,8 +7,8 @@ import { Input } from "@/components/ui/input";
 import { DEMO_ACCOUNTS, matriculaToDemoEmail } from "@/lib/demo-accounts";
 
 const seedDemoAccounts = createServerFn({ method: "POST" })
-  .validator((data: { token?: string }) => data)
-  .handler(async ({ data }) => {
+  .inputValidator((data: { token?: string }) => data)
+  .handler(async ({ data }: { data: { token?: string } }) => {
     const expectedToken = process.env.DEMO_SEED_TOKEN;
     if (expectedToken && data.token !== expectedToken) {
       throw new Error("Token demo incorrecto.");
