@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Wrench, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
+import { DEMO_ACCOUNTS } from "@/lib/demo-accounts";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({ meta: [{ title: "Iniciar sesión — Mural de Mantenimiento" }] }),
@@ -14,18 +15,12 @@ export const Route = createFileRoute("/auth")({
 });
 
 const MATRICULA_DOMAIN = "unistmo.local";
-const AUTH_REDIRECT_PATH = "/inicio";
 
 function matriculaToEmail(matricula: string) {
   return `${matricula.trim().toLowerCase()}@${MATRICULA_DOMAIN}`;
 }
 function isValidMatricula(m: string) {
   return /^[a-zA-Z0-9]{4,15}$/.test(m.trim());
-}
-function getAuthRedirectUrl() {
-  const configuredOrigin = import.meta.env.VITE_AUTH_REDIRECT_ORIGIN?.replace(/\/$/, "");
-  const origin = configuredOrigin || window.location.origin;
-  return `${origin}${AUTH_REDIRECT_PATH}`;
 }
 
 function AuthPage() {
@@ -61,13 +56,13 @@ function AuthPage() {
 
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault();
-    if (!isValidMatricula(sMatricula)) return toast.error("Matrícula inválida (4-15 caracteres alfanuméricos)");
+    if (!isValidMatricula(sMatricula))
+      return toast.error("Matrícula inválida (4-15 caracteres alfanuméricos)");
     setLoading(true);
     const { error } = await supabase.auth.signUp({
       email: matriculaToEmail(sMatricula),
       password: sPass,
       options: {
-        emailRedirectTo: getAuthRedirectUrl(),
         data: {
           nombre_completo: sName,
           area: sArea,
@@ -83,7 +78,10 @@ function AuthPage() {
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
       <div className="hidden lg:flex relative gradient-primary p-12 flex-col justify-between text-primary-foreground">
-        <Link to="/" className="inline-flex items-center gap-2 text-sm opacity-80 hover:opacity-100">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 text-sm opacity-80 hover:opacity-100"
+        >
           <ArrowLeft className="size-4" /> Volver al inicio
         </Link>
         <div>
@@ -91,11 +89,13 @@ function AuthPage() {
             <Wrench className="size-7" />
           </div>
           <h2 className="mt-6 text-4xl font-bold leading-tight">
-            Universidad del Istmo<br />Campus Ixtepec
+            Universidad del Istmo
+            <br />
+            Campus Ixtepec
           </h2>
           <p className="mt-3 text-primary-foreground/80 max-w-md">
-            Mural digital para reportes de mantenimiento. Comunicación clara,
-            seguimiento puntual, espacios siempre operativos.
+            Mural digital para reportes de mantenimiento. Comunicación clara, seguimiento puntual,
+            espacios siempre operativos.
           </p>
         </div>
         <div className="text-xs text-primary-foreground/70">
@@ -115,6 +115,23 @@ function AuthPage() {
           <p className="text-sm text-muted-foreground mt-1">
             Ingresa con tu matrícula institucional.
           </p>
+
+          <div className="mt-4 grid grid-cols-3 gap-2">
+            {DEMO_ACCOUNTS.map((account) => (
+              <Button
+                key={account.matricula}
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setMatricula(account.matricula);
+                  setPassword(account.password);
+                }}
+              >
+                {account.label}
+              </Button>
+            ))}
+          </div>
 
           <Tabs defaultValue="login" className="mt-6">
             <TabsList className="grid grid-cols-2 w-full">
@@ -137,7 +154,14 @@ function AuthPage() {
                 </div>
                 <div>
                   <Label htmlFor="pwd">Contraseña</Label>
-                  <Input id="pwd" type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+                  <Input
+                    id="pwd"
+                    type="password"
+                    autoComplete="current-password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
                 </div>
                 <Button type="submit" disabled={loading} className="w-full gradient-primary">
                   {loading ? "Ingresando..." : "Ingresar"}
@@ -149,7 +173,12 @@ function AuthPage() {
               <form onSubmit={handleSignup} className="space-y-4">
                 <div>
                   <Label htmlFor="sname">Nombre completo</Label>
-                  <Input id="sname" required value={sName} onChange={(e) => setSName(e.target.value)} />
+                  <Input
+                    id="sname"
+                    required
+                    value={sName}
+                    onChange={(e) => setSName(e.target.value)}
+                  />
                 </div>
                 <div>
                   <Label htmlFor="smatricula">Matrícula</Label>
@@ -163,17 +192,31 @@ function AuthPage() {
                 </div>
                 <div>
                   <Label htmlFor="sarea">Sala / Área asignada</Label>
-                  <Input id="sarea" placeholder="Ej: Lab. Cómputo 2" value={sArea} onChange={(e) => setSArea(e.target.value)} />
+                  <Input
+                    id="sarea"
+                    placeholder="Ej: Lab. Cómputo 2"
+                    value={sArea}
+                    onChange={(e) => setSArea(e.target.value)}
+                  />
                 </div>
                 <div>
                   <Label htmlFor="spwd">Contraseña</Label>
-                  <Input id="spwd" type="password" autoComplete="new-password" required minLength={6} value={sPass} onChange={(e) => setSPass(e.target.value)} />
+                  <Input
+                    id="spwd"
+                    type="password"
+                    autoComplete="new-password"
+                    required
+                    minLength={6}
+                    value={sPass}
+                    onChange={(e) => setSPass(e.target.value)}
+                  />
                 </div>
                 <Button type="submit" disabled={loading} className="w-full gradient-primary">
                   {loading ? "Creando..." : "Crear cuenta"}
                 </Button>
                 <p className="text-xs text-muted-foreground">
-                  Por defecto se asigna rol <strong>Encargado</strong>. Un administrador puede actualizar tu rol.
+                  Por defecto se asigna rol <strong>Encargado</strong>. Un administrador puede
+                  actualizar tu rol.
                 </p>
               </form>
             </TabsContent>
